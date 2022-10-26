@@ -1,7 +1,8 @@
 package br.com.futurodev.primeiraapi.dto;
 
-import br.com.futurodev.primeiraapi.model.TelefoneModel;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,23 @@ public class UsuarioDTO {
     private String nome;
     private String login;
 
+    private String senha;
+
+    private OffsetDateTime dataCadastro;
+
+    private OffsetDateTime dataAtualizacao;
+
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+
+    @JsonIgnoreProperties(value = "tipo", allowGetters = true)
     private List<TelefoneDTO> telefones = new ArrayList<TelefoneDTO>();
 
     public List<TelefoneDTO> getTelefones() {
@@ -33,6 +51,7 @@ public class UsuarioDTO {
         return nome;
     }
 
+
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -43,5 +62,22 @@ public class UsuarioDTO {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+
+    public OffsetDateTime getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(OffsetDateTime dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public OffsetDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(OffsetDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 }

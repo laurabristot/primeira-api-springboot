@@ -7,18 +7,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
+
 /**
+ *
  * A sample greetings controller to return greeting text
  */
 @RestController
 public class GreetingsController {
 
-    @Autowired
+    @Autowired //IC/ CD/ CDI Injeção de Dependência
     private ProdutoRepository produtoRepository;
 
     /**
+     *
      * @param name the name to greet
      * @return greeting text
      */
@@ -28,42 +32,54 @@ public class GreetingsController {
         return "Hello " + name + "!";
     }
 
-    @GetMapping(value = "/mostrarnome/{nome}")
+    @GetMapping(value = "/mostarnome/{nome}")
     @ResponseStatus(HttpStatus.OK)
-    public String mostrarnome(@PathVariable String nome) {
-        return "olá " + nome;
+    public String mostrarnome(@PathVariable String nome){
+        return "Ola "+nome;
     }
 
-    @RequestMapping(value = "/produto/{descricao}", method = RequestMethod.GET)
+    @RequestMapping(value = "/produto/{descricao}" , method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public String salvar(@PathVariable String descricao) {
+    public String salvar(@PathVariable String descricao){
+
         ProdutoModel produto = new ProdutoModel();
         produto.setDescricao(descricao);
-        produtoRepository.save(produto); // grava o produto no banco de dados
+        produtoRepository.save(produto); // grava no banco de dados um produto
 
-        return "Produto " + descricao + " registrado com sucesso!";
+        return "Produto "+descricao+" registrado com sucesso!";
     }
 
     @GetMapping(value = "/produtos")
-    @ResponseBody // retorna os dados no corpo da resposta
-    public ResponseEntity<List<ProdutoModel>> listarProdutos() {
+    @ResponseBody // Retorna os dados no corpo da resposta
+    public ResponseEntity<List<ProdutoModel>> listarProdutos(){
+
         List<ProdutoModel> produtos = produtoRepository.findAll(); // consulta no banco de dados todos os produtos
-        return new ResponseEntity<List<ProdutoModel>>(produtos, HttpStatus.OK); // retorna a lista em json
+
+        return new ResponseEntity<List<ProdutoModel>>(produtos, HttpStatus.OK); // Retorna a lista em JSON
     }
 
-    @PostMapping(value = "/produto/salvar") // mapeia a url
-    @ResponseBody // descreve a resposta informando que o retorno será no corpo da requisição
-    public ResponseEntity<ProdutoModel> salvar(@RequestBody ProdutoModel produto) { //aqui recebe os dados para salvar
-        ProdutoModel prod = produtoRepository.save(produto);
-        return new ResponseEntity<ProdutoModel>(prod, HttpStatus.CREATED);
+    @PostMapping(value = "/produto/salvar") /* Mapeia a URL */
+    @ResponseBody /* Descreve a resposta informando que o retorno será no corpo da requisição */
+    public ResponseEntity<ProdutoModel> salvar(@RequestBody ProdutoModel produto){ /* Recebe os dados para salvar */
+          ProdutoModel prod = produtoRepository.save(produto);
+          return new ResponseEntity<ProdutoModel>(prod, HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/produto/delete")
-    @ResponseBody // descricao da resposta
-    public ResponseEntity<String> delete(@RequestParam Long idProduto){ // recebe da requisicao o parametro
-        produtoRepository.deleteById(idProduto);
 
-        return new ResponseEntity<String>("Produto deletado com sucesso", HttpStatus.OK);
+    @DeleteMapping(value = "/produto/delete") /* Mapeia a URL */
+    @ResponseBody /* Descrição da resposta */
+    public ResponseEntity<String> delete(@RequestParam Long idProduto){ /* Recebe da requisição o parâmetro */
+           produtoRepository.deleteById(idProduto);
+           return new ResponseEntity<String>("Produto deletado com sucesso.",HttpStatus.OK);
     }
+
+    @GetMapping(value = "/produto/buscar/{id}")
+    @ResponseBody
+    public ResponseEntity<ProdutoModel> buscarPorId(@PathVariable Long id){
+        ProdutoModel prod = produtoRepository.findById(id).get();
+        return new ResponseEntity<ProdutoModel>(prod, HttpStatus.OK);
+
+    }
+
 
 }

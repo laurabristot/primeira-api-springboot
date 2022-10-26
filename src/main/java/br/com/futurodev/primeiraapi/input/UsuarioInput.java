@@ -7,10 +7,10 @@ import java.util.List;
 
 public class UsuarioInput {
 
+    private Long id;
     private String nome;
     private String login;
     private String senha;
-    private Long id;
 
     private List<TelefoneDTO> telefones = new ArrayList<TelefoneDTO>();
 
@@ -53,4 +53,6 @@ public class UsuarioInput {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+
 }

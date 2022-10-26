@@ -1,8 +1,11 @@
 package br.com.futurodev.primeiraapi.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,23 +14,34 @@ import java.util.Objects;
 @Table(name = "usuario")
 public class UsuarioModel {
 
+    // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
+    // @SequenceGenerator(name = "seq_usuario", sequenceName = "seq_usuario", allocationSize = 1, initialValue = 1)
     @Id
-//    @SequenceGenerator(name = "seq_usuarios", sequenceName = "seq_usuario")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true) // not null
+    @Column(unique = true)
     private String login;
 
-    @Column(unique = true)
     private String senha;
-
 
     private String nome;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL) // o nome do mappedBy tem que ser IGUAL ao que vamos criar no TelefoneModel // o cascade serve pra quando fizer uma atualização nos dados pela classe mãe, interferir na classe filha também
+
+    @CreationTimestamp
+    @Column(columnDefinition = "timestamp(0) without time zone DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP(0))", updatable = false)
+    private OffsetDateTime dataCadastro;
+
+
+    @UpdateTimestamp
+    @Column(columnDefinition = "timestamp(0) without time zone DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP(0))")
+    private OffsetDateTime dataAtualizacao;
+
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<TelefoneModel> telefones = new ArrayList<TelefoneModel>();
+
 
     public List<TelefoneModel> getTelefones() {
         return telefones;
@@ -35,19 +49,6 @@ public class UsuarioModel {
 
     public void setTelefones(List<TelefoneModel> telefones) {
         this.telefones = telefones;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UsuarioModel that = (UsuarioModel) o;
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     public Long getId() {
@@ -80,5 +81,35 @@ public class UsuarioModel {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+
+    public OffsetDateTime getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(OffsetDateTime dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public OffsetDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(OffsetDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UsuarioModel that = (UsuarioModel) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

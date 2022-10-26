@@ -1,6 +1,5 @@
 package br.com.futurodev.primeiraapi.model;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
@@ -10,8 +9,9 @@ import java.util.Objects;
 @Table(name = "telefone")
 public class TelefoneModel {
 
+   // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_telefone")
+   // @SequenceGenerator(name = "seq_telefone", sequenceName = "seq_telefone_sequencia", allocationSize = 1, initialValue = 1)
     @Id
-//    @SequenceGenerator(name = "seq_telefone", sequenceName = "seq_telefone")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -19,12 +19,12 @@ public class TelefoneModel {
 
     private String tipo;
 
+    //private Long idUsuario;
 
     @ManyToOne
-    @JoinColumn(name = "idUsuario", referencedColumnName = "id")
-    @JsonBackReference // para impedir que gere um loop infinito
+    @JoinColumn(name = "idUsuario", referencedColumnName = "id", foreignKey = @ForeignKey(name ="fk_usuario"))
+    @JsonBackReference
     private UsuarioModel usuario;
-
 
     public UsuarioModel getUsuario() {
         return usuario;
@@ -34,19 +34,6 @@ public class TelefoneModel {
         this.usuario = usuario;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TelefoneModel that = (TelefoneModel) o;
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 
     public Long getId() {
         return id;
@@ -70,5 +57,18 @@ public class TelefoneModel {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TelefoneModel that = (TelefoneModel) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
